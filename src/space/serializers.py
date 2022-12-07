@@ -16,7 +16,18 @@ class SpaceStationSerializer(serializers.ModelSerializer):
 
 
 
-class SpaceStationStatusSerializer(serializers.ModelSerializer):
+class SpaceStationStateSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.SpaceStation
         fields = ['position_x', 'position_y', 'position_z']
+
+
+class PointingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Pointing
+        fields = ['axis', 'distance','user']
+        extra_kwargs = {
+            'user': {
+                'read_only': True,
+            },
+        }

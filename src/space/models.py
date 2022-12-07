@@ -10,7 +10,7 @@ class SpaceStation(models.Model):
         (BROKEN, "broken")
     ]
     name = models.CharField(max_length=50, unique=True)
-    condition = models.CharField(max_length=8, default=RUNNING)
+    condition = models.CharField(max_length=8, choices=CONDITION_CHOICES, default=RUNNING)
     position_x = models.IntegerField()
     position_y = models.IntegerField()
     position_z = models.IntegerField()
