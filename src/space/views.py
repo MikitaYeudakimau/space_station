@@ -1,6 +1,6 @@
 import datetime
 
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.response import Response
 
 from space import serializers, models
@@ -18,7 +18,7 @@ class SpaceStationRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPI
     queryset = models.SpaceStation.objects.all()
     serializer_class = serializers.SpaceStationSerializer
 
-
+#TODO : need to edit response after post pointing model
 class SpaceStationStateRetrieveCreateAPIView(generics.RetrieveAPIView, generics.CreateAPIView):
     def get_serializer_class(self):
         if self.request.method == 'GET':
@@ -45,9 +45,18 @@ class SpaceStationStateRetrieveCreateAPIView(generics.RetrieveAPIView, generics.
             obj.position_y += distance
             value = obj.position_y
         else:
-            obj.position_z = +distance
+            obj.position_z += distance
             value = obj.position_z
         if value < 0:
             obj.condition = "broken"
             obj.date_broken = datetime.datetime.today()
         obj.save()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        pk = self.kwargs['pk']
+        instance = models.SpaceStation.objects.get(pk=pk)
+        serializer = serializers.SpaceStationStateSerializer(instance)
+        return Response(serializer.data)
