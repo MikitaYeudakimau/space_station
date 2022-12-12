@@ -11,9 +11,9 @@ class SpaceStation(models.Model):
     ]
     name = models.CharField(max_length=50, unique=True)
     condition = models.CharField(max_length=8, choices=CONDITION_CHOICES, default=RUNNING)
-    position_x = models.IntegerField()
-    position_y = models.IntegerField()
-    position_z = models.IntegerField()
+    position_x = models.IntegerField(default=100)
+    position_y = models.IntegerField(default=100)
+    position_z = models.IntegerField(default=100)
     date_creation = models.DateTimeField(auto_now_add=True)
     date_broken = models.DateTimeField(blank=True, null=True)
 
