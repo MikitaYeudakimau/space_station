@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 
 
 class SpaceStation(models.Model):
+    """
+    SpaceStation model
+    """
     RUNNING = "running"
     BROKEN = "broken"
     CONDITION_CHOICES = [
@@ -19,6 +22,9 @@ class SpaceStation(models.Model):
 
 
 class Pointing(models.Model):
+    """
+    Pointing model for changing space_station positions
+    """
     X = "x"
     Y = "y"
     Z = "z"
