@@ -2,8 +2,7 @@ import uuid
 
 import pytest
 
-url_create_station = "http://127.0.0.1:8000/api/v1/stations/"
-url_create_point = "http://127.0.0.1:8000/api/v1/stations/1/state/"
+from django.urls import reverse
 
 
 @pytest.fixture
@@ -25,17 +24,15 @@ def create_user(db, django_user_model, test_password):
     """
     Fixture for creating admin-user
     """
-
     def make_user(**kwargs):
         kwargs['password'] = test_password
         if 'username' not in kwargs:
             kwargs['username'] = str(uuid.uuid4())
         return django_user_model.objects.create_user(**kwargs)
-
     return make_user
 
 
-@pytest.fixture
+@pytest.fixture(scope='function')
 def login(api_client, create_user, test_password):
     """
     Fixture for admin user logging
@@ -53,95 +50,108 @@ def create_station(api_client):
     """
     Fixture for creation of Appollon station
     """
-    response = api_client.post(url_create_station, {"name": "Apollon"})
+    url = reverse("space-list")
+    response = api_client.post(url, {"name": "Apollon"})
     return response.data
 
 
 @pytest.fixture
-def create_right_pointing_axis_x(login):
+def create_right_pointing_axis_x(create_station, login):
     """
     Fixture for creating positive X movement
     """
+    station_data = create_station
     api_client, user = login
-    data = {
+    request_data = {
         "axis": "x",
         "distance": 100,
         "user": user
     }
-    api_client.post(url_create_point, data=data)
-    return data
+    url = reverse("space-detail-state", kwargs={'pk': station_data['id']})
+    api_client.post(url, data=request_data)
+    return station_data, request_data
 
 
 @pytest.fixture
-def create_right_pointing_axis_y(login):
+def create_right_pointing_axis_y(create_station, login):
     """
     Fixture for creating positive Y movement
     """
+    station_data = create_station
     api_client, user = login
-    data = {
+    request_data = {
         "axis": "y",
         "distance": 100,
         "user": user
     }
-    api_client.post(url_create_point, data=data)
-    return data
+    url = reverse("space-detail-state", kwargs={'pk': station_data['id']})
+    api_client.post(url, data=request_data)
+    return station_data, request_data
 
 
 @pytest.fixture
-def create_right_pointing_axis_z(login):
+def create_right_pointing_axis_z(create_station, login):
     """
     Fixture for creating positive Z movement
     """
+    station_data = create_station
     api_client, user = login
-    data = {
+    request_data = {
         "axis": "z",
         "distance": 100,
         "user": user
     }
-    api_client.post(url_create_point, data=data)
-    return data
+    url = reverse("space-detail-state", kwargs={'pk': station_data['id']})
+    api_client.post(url, data=request_data)
+    return station_data, request_data
 
 
 @pytest.fixture
-def create_left_pointing_axis_x(login):
+def create_left_pointing_axis_x(create_station, login):
     """
     Fixture for creating negative X movement
     """
+    station_data = create_station
     api_client, user = login
-    data = {
+    request_data = {
         "axis": "x",
         "distance": -200,
         "user": user
     }
-    api_client.post(url_create_point, data=data)
-    return data
+    url = reverse("space-detail-state", kwargs={'pk': station_data['id']})
+    api_client.post(url, data=request_data)
+    return station_data, request_data
 
 
 @pytest.fixture
-def create_left_pointing_axis_y(login):
+def create_left_pointing_axis_y(create_station, login):
     """
     Fixture for creating negative Y movement
     """
+    station_data = create_station
     api_client, user = login
-    data = {
+    request_data = {
         "axis": "y",
         "distance": -200,
         "user": user
     }
-    api_client.post(url_create_point, data=data)
-    return data
+    url = reverse("space-detail-state", kwargs={'pk': station_data['id']})
+    api_client.post(url, data=request_data)
+    return station_data, request_data
 
 
 @pytest.fixture
-def create_left_pointing_axis_z(login):
+def create_left_pointing_axis_z(create_station, login):
     """
     Fixture for creating negative Z movement
     """
+    station_data = create_station
     api_client, user = login
-    data = {
+    request_data = {
         "axis": "z",
         "distance": -200,
         "user": user
     }
-    api_client.post(url_create_point, data=data)
-    return data
+    url = reverse("space-detail-state", kwargs={'pk': station_data['id']})
+    api_client.post(url, data=request_data)
+    return station_data, request_data
